@@ -26,6 +26,23 @@ void GameEngineCore::EngineResourcesInitialize()
 	Index[5] = 3;
 
 	GameEngineIndexBuffer::Create("Rect", Index);
+
+	Vertex.clear();
+	std::vector<float4>().swap(Vertex);
+	Vertex.push_back(float4{ 0.f, -0.5f });
+	Vertex.push_back(float4{ 0.5f, 0.5f });
+	Vertex.push_back(float4{ -0.5f, 0.5f });
+
+	GameEngineVertexBuffer::Create("Triangle", Vertex);
+
+	Index.clear();
+	std::vector<int>().swap(Index);
+	Index.resize(3);
+	Index[0] = 0;
+	Index[1] = 1;
+	Index[2] = 2;
+
+	GameEngineIndexBuffer::Create("Triangle", Index);
 }
 void GameEngineCore::EngineResourcesDestroy()
 {

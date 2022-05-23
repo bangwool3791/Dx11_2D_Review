@@ -23,7 +23,7 @@ public:
 	GameEngineActor& operator=(const GameEngineActor& _Other) = delete;
 	GameEngineActor& operator=(GameEngineActor&& _Other) noexcept = delete;
 
-	inline GameEngineLevel* GetLevel() 	{		return ParentLevel;	}
+	inline class GameEngineLevel* GetLevel() 	{		return ParentLevel;	}
 
 	template<typename Componenttype>
 	Componenttype* CreateComponent() 
