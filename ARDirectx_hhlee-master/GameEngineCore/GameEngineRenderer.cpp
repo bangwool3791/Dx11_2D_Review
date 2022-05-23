@@ -23,6 +23,7 @@ void GameEngineRenderer::Start()
 	GetActor()->GetLevel()->PushRenderer(this);
 }
 
+//가독성, 유지보수 떨어지는 코드
 void GameEngineRenderer::Render(float _DeltaTime)
 {
 	GameEngineVertexBuffer* Vertex = GameEngineVertexBuffer::Find("Triangle");
@@ -39,6 +40,7 @@ void GameEngineRenderer::Render(float _DeltaTime)
 		for (size_t i = 0; i < Index->Indexs.size(); i++)
 		{
 			LocalPos[i] = Vertex->Vertexs[i];
+			//회전하기 전 로컬에서의 이동은 회전 전의 상태를 반영
 			LocalPos[i] -= float4{ 0.f, 0.125f };
 			ReverseLocalPos[i] = Vertex->Vertexs[i];
 			ReverseLocalPos[i] -= float4{ 0.f, 0.125f };
