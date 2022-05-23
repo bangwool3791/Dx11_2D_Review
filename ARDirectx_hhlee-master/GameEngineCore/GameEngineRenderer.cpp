@@ -26,39 +26,22 @@ void GameEngineRenderer::Start()
 //가독성, 유지보수 떨어지는 코드
 void GameEngineRenderer::Render(float _DeltaTime)
 {
-	GameEngineVertexBuffer* Vertex = GameEngineVertexBuffer::Find("Triangle");
-	GameEngineIndexBuffer* Index = GameEngineIndexBuffer::Find("Triangle");
-
-	static std::vector<float4> LocalPos;
-	static std::vector<float4> ReverseLocalPos;
-
-	if (!LocalPos.capacity() || !ReverseLocalPos.capacity())
-	{
-		LocalPos.resize(Index->Indexs.size());
-		ReverseLocalPos.resize(Index->Indexs.size());
-
-		for (size_t i = 0; i < Index->Indexs.size(); i++)
-		{
-			LocalPos[i] = Vertex->Vertexs[i];
-			//회전하기 전 로컬에서의 이동은 회전 전의 상태를 반영
-			LocalPos[i] -= float4{ 0.f, 0.125f };
-			ReverseLocalPos[i] = Vertex->Vertexs[i];
-			ReverseLocalPos[i] -= float4{ 0.f, 0.125f };
-			ReverseLocalPos[i] = float4::VectorRotationToRadianZ(ReverseLocalPos[i], GameEngineMath::PIE);
-		}
-	}
-
+	GameEngineVertexBuffer* Vertex = GameEngineVertexBuffer::Find("Hexagram");
+	GameEngineIndexBuffer* Index = GameEngineIndexBuffer::Find("Hexagram");
 
 	std::vector<POINT> DrawVertex;
 	DrawVertex.resize(Index->Indexs.size());
 	std::vector<float4> CopyBuffer;
 	CopyBuffer.resize(Index->Indexs.size());
 
+	static float fAngle = 0.f;
+	fAngle += _DeltaTime;
+
 	for (size_t i = 0; i < Index->Indexs.size(); i++)
 	{
-		LocalPos[i] = float4::VectorRotationToRadianZ(LocalPos[i], GameEngineMath::PIE2 * _DeltaTime);
-		CopyBuffer[i] = LocalPos[i];
+		CopyBuffer[i] =  Vertex->Vertexs[Index->Indexs[i]];
 		CopyBuffer[i] *= GetActor()->GetTransform().GetScale();
+		CopyBuffer[i] = float4::VectorRotationToRadianZ(CopyBuffer[i], fAngle);
 		CopyBuffer[i] += GetActor()->GetTransform().GetPosition();
 		DrawVertex[i] = CopyBuffer[i].GetConvertWindowPOINT();
 	}
@@ -68,25 +51,4 @@ void GameEngineRenderer::Render(float _DeltaTime)
 		Polygon(GameEngineWindow::GetHDC(), &DrawVertex[i], 3);
 	}
 
-	std::vector<POINT>().swap(DrawVertex);
-	DrawVertex.clear();
-	DrawVertex.resize(Index->Indexs.size());
-
-	std::vector<float4>().swap(CopyBuffer);
-	CopyBuffer.clear();
-	CopyBuffer.resize(Index->Indexs.size());
-
-	for (size_t i = 0; i < Index->Indexs.size(); i++)
-	{
-		ReverseLocalPos[i] = float4::VectorRotationToRadianZ(ReverseLocalPos[i], GameEngineMath::PIE2 * _DeltaTime);
-		CopyBuffer[i] = ReverseLocalPos[i];
-		CopyBuffer[i] *= GetActor()->GetTransform().GetScale();
-		CopyBuffer[i] += GetActor()->GetTransform().GetPosition();
-		DrawVertex[i] = CopyBuffer[i].GetConvertWindowPOINT();
-	}
-
-	for (size_t i = 0; i < Index->Indexs.size(); i += 3)
-	{
-		Polygon(GameEngineWindow::GetHDC(), &DrawVertex[i], 3);
-	}
 }
