@@ -19,9 +19,6 @@
     <Filter Include="Global">
       <UniqueIdentifier>{5c0d327c-f680-4cd4-a5c1-9a7caec22b46}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Actor\Star">
-      <UniqueIdentifier>{acd4cb94-0851-4ef6-ae03-2d2689887ff6}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ContentsCore.h">
@@ -36,11 +33,11 @@
     <ClInclude Include="Player.h">
       <Filter>Actor\Play</Filter>
     </ClInclude>
-    <ClInclude Include="TitleLogo.h">
-      <Filter>Actor\Title</Filter>
-    </ClInclude>
     <ClInclude Include="Enums.h">
       <Filter>Global</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleLogo.h">
+      <Filter>Actor\Title</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -90,7 +90,6 @@ void GameEngineWindow::RegClass(HINSTANCE _hInst)
     RegisterClassExA(&wcex);
 }
 
-//윈도우 창에 표기 할 타이틀 스트링, 인스턴스를 등록하는 함수.
 void GameEngineWindow::CreateGameWindow(HINSTANCE _hInst, const std::string& _Title)
 {
     if (nullptr != hInst_)
@@ -103,12 +102,11 @@ void GameEngineWindow::CreateGameWindow(HINSTANCE _hInst, const std::string& _Ti
         // 클래스 등록은 1번만 하려고 친 코드
     hInst_ = _hInst;
     RegClass(_hInst);
-    //API 함수를 사용해 핸들을 부여.
+
     hWnd_ = CreateWindowExA(0L, "GameEngineWindowClass", Title_.c_str(), WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, _hInst, nullptr);
 
     // 화면에 무언가를 그리기 위한 핸들입니다.
-    //DC를 얻어온다.
     HDC_ = GetDC(hWnd_);
 
     if (!hWnd_)
@@ -181,7 +179,7 @@ void GameEngineWindow::MessageLoop(std::function<void()> _Init, std::function<vo
 void GameEngineWindow::SetWindowScaleAndPosition(float4 _Pos, float4 _Scale) 
 {
     // 메뉴바 
-    //입력 받은 스케일의 x,y값으로 Rect를 정의한다
+
     RECT Rc = { 0, 0,  _Scale.ix(),  _Scale.iy() };
 
     // 1280 + 메뉴바
@@ -189,6 +187,6 @@ void GameEngineWindow::SetWindowScaleAndPosition(float4 _Pos, float4 _Scale)
     AdjustWindowRect(&Rc, WS_OVERLAPPEDWINDOW, FALSE);
 
     Scale_ = _Scale;
-    //윈도우 창이 놓일 위치와, 크기를 정의한다.
+
     SetWindowPos(hWnd_, nullptr, _Pos.ix(), _Pos.iy(), Rc.right - Rc.left, Rc.bottom - Rc.top, SWP_NOZORDER);
 }

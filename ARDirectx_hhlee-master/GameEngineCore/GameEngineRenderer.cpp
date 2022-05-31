@@ -3,11 +3,9 @@
 #include "GameEngineLevel.h"
 #include <Windows.h>
 #include <GameEngineBase/GameEngineWindow.h>
-#include <GameEngineCore/GameEngineVertexBuffer.h>
-#include <GameEngineCore/GameEngineIndexBuffer.h>
-#include <GameEngineBase/GameEngineDebug.h>   
-#include <GameEngineBase/GameEngineMath.h>
-#include <iostream>
+
+#include "GameEngineVertexBuffer.h"
+#include "GameEngineIndexBuffer.h"
 
 GameEngineRenderer::GameEngineRenderer() 
 {
@@ -23,32 +21,40 @@ void GameEngineRenderer::Start()
 	GetActor()->GetLevel()->PushRenderer(this);
 }
 
-//가독성, 유지보수 떨어지는 코드
+
 void GameEngineRenderer::Render(float _DeltaTime)
 {
-	GameEngineVertexBuffer* Vertex = GameEngineVertexBuffer::Find("Hexagram");
-	GameEngineIndexBuffer* Index = GameEngineIndexBuffer::Find("Hexagram");
-
+	// 랜더링
+	GameEngineVertexBuffer* Vertex = GameEngineVertexBuffer::Find("Box");
+	GameEngineIndexBuffer* Index = GameEngineIndexBuffer::Find("Box");
+	
 	std::vector<POINT> DrawVertex;
 	DrawVertex.resize(Index->Indexs.size());
+
 	std::vector<float4> CopyBuffer;
 	CopyBuffer.resize(Index->Indexs.size());
 
-	static float fAngle = 0.f;
-	fAngle += _DeltaTime;
+
 
 	for (size_t i = 0; i < Index->Indexs.size(); i++)
 	{
-		CopyBuffer[i] =  Vertex->Vertexs[Index->Indexs[i]];
-		CopyBuffer[i] *= GetActor()->GetTransform().GetScale();
-		CopyBuffer[i] = float4::VectorRotationToRadianZ(CopyBuffer[i], fAngle);
-		CopyBuffer[i] += GetActor()->GetTransform().GetPosition();
+		int TriIndex = Index->Indexs[i];
+
+		// 0 번째 순서의 점이 됩니다.
+		// 최초에 원본 매쉬의 점을 복사합니다.
+		CopyBuffer[i] = Vertex->Vertexs[TriIndex];
+
+		CopyBuffer[i] = CopyBuffer[i] * GetTransform().GetWorldWorld();
+
 		DrawVertex[i] = CopyBuffer[i].GetConvertWindowPOINT();
 	}
 
-	for (size_t i = 0; i < Index->Indexs.size(); i+= 3)
+	
+	for (size_t i = 0; i < DrawVertex.size(); i += 3)
 	{
 		Polygon(GameEngineWindow::GetHDC(), &DrawVertex[i], 3);
 	}
+	
 
+	// Rectangle(GameEngineWindow::GetHDC(), LeftTop.ix(), LeftTop.iy(), RightBot.ix(), RightBot.iy());
 }

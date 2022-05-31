@@ -1,9 +1,19 @@
 #include "GameEngineIndexBuffer.h"
 #include <GameEngineBase/GameEngineString.h>
 
-GameEngineIndexBuffer* GameEngineIndexBuffer::CreateRes(const std::vector<int>& _Indexs, const std::string& _Name)
+GameEngineIndexBuffer::GameEngineIndexBuffer() 
+{
+}
+
+GameEngineIndexBuffer::~GameEngineIndexBuffer() 
+{
+}
+
+
+GameEngineIndexBuffer* GameEngineIndexBuffer::CreateRes(const std::vector<int>& _Indexs, const std::string& _Name /*= ""*/)
 {
 	std::string Name = GameEngineString::ToUpperReturn(_Name);
+
 	GameEngineIndexBuffer* NewMesh = new GameEngineIndexBuffer();
 	NewMesh->SetName(Name);
 	NewMesh->Indexs = _Indexs;
@@ -21,4 +31,3 @@ void GameEngineIndexBuffer::Create(const std::vector<int>& _Indexs)
 	GameEngineIndexBuffer* NewMesh = CreateRes(_Indexs);
 	UnNamedRes.push_back(NewMesh);
 }
-

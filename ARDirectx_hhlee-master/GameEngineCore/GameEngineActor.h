@@ -1,11 +1,12 @@
 #pragma once
 #include <GameEngineBase/GameEngineNameObject.h>
 #include <GameEngineBase/GameEngineUpdateObject.h>
-#include <GameEngineBase/GameEngineTransform.h>
 #include <list>
+#include <GameEngineBase/GameEngineTransform.h>
 
 // 설명 : 화면에 등장하는 모든것을 표현하기 위한 클래스
 class GameEngineComponent;
+class GameEngineTransformComponent;
 class GameEngineActor :
 	public GameEngineNameObject,
 	public GameEngineUpdateObject
@@ -23,7 +24,10 @@ public:
 	GameEngineActor& operator=(const GameEngineActor& _Other) = delete;
 	GameEngineActor& operator=(GameEngineActor&& _Other) noexcept = delete;
 
-	inline class GameEngineLevel* GetLevel() 	{		return ParentLevel;	}
+	inline GameEngineLevel* GetLevel() 	
+	{		
+		return ParentLevel;	
+	}
 
 	template<typename Componenttype>
 	Componenttype* CreateComponent() 
@@ -31,19 +35,34 @@ public:
 		GameEngineComponent* NewComponent = new Componenttype();
 		NewComponent->ParentActor = this;
 		NewComponent->Start();
-		AllComList.push_back(NewComponent);
+
+		GameEngineTransformComponent* TransCom = dynamic_cast<GameEngineTransformComponent*>(NewComponent);
+		if (nullptr == TransCom)
+		{
+			AllComList.push_back(NewComponent);
+		}
+		else 
+		{
+			SettingTransformComponent(TransCom);
+			AllTransComList.push_back(TransCom);
+		}
 		return dynamic_cast<Componenttype*>(NewComponent);
 	}
+
+	void SettingTransformComponent(GameEngineTransformComponent* TransCom);
 
 protected:
 	virtual void Start() override;
 	virtual void Update(float _DeltaTime) override;
 	virtual void End() override;
-
+protected:
+	class GameEngineRenderer* RendererComponent = nullptr;
 private:
 	void ComponentUpdate(float _ScaleDeltaTime, float _DeltaTime);
 
 	std::list<class GameEngineComponent*> AllComList;
+
+	std::list<class GameEngineTransformComponent*> AllTransComList;
 
 	class GameEngineLevel* ParentLevel;
 
@@ -51,12 +70,23 @@ private:
 	{
 		ParentLevel = _ParentLevel;
 	}
-private :
+
+	void SetPosition(const float4& _Pos)
+	{
+		GetTransform().SetLocalPosition(_Pos);
+	}
+
+/////////////////////////////////////////////////// 기하관련
+private:
 	GameEngineTransform Transform;
-public :
-	GameEngineTransform& GetTransform()
+
+public:
+	GameEngineTransform& GetTransform() 
 	{
 		return Transform;
 	}
+
+public:
+	void ComponentCalculateTransform();
 };
 

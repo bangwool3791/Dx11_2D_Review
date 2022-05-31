@@ -47,10 +47,11 @@ bool GameEngineCore::ChangeLevel(const std::string& _Name)
 
 void GameEngineCore::CoreStart(GameEngineCore* _UserCore)
 {
+	// 엔진 리소스는 완성되어야 합니다.
+	EngineResourcesInitialize();
+
 	// 엔진이 뭔가를 할겁니다.
 	// 준비를 먼저하고.
-	//코어 헤더에서 정의된 함수는 코어 헤더를 호출하면 사용 가능
-	EngineResourcesInitialize();
 	_UserCore->Start();
 }
 
@@ -87,12 +88,7 @@ void GameEngineCore::CoreUpdate(GameEngineCore* _UserCore)
 	// 엔진수준에서 유저가 하고 싶은일.
 	_UserCore->Update(DeltaTime);
 
-	// 레벨수준에서 유저가 하고 싶은일.
-	CurrentLevel->AddAccTime(DeltaTime);
-	CurrentLevel->Update(DeltaTime);
-	CurrentLevel->ActorUpdate(DeltaTime);
-	CurrentLevel->Render(DeltaTime);
-	// CurrentLevel->
+	CurrentLevel->LevelUpdate(DeltaTime);
 
 }
 
@@ -118,11 +114,10 @@ void GameEngineCore::CoreEnd(GameEngineCore* _UserCore)
 	
 }
 
-//윈도우를 생성하는 함수
+
 void GameEngineCore::WindowCreate(const std::string& _Name, GameEngineCore* _UserCore)
 {
 	GameEngineWindow::GetInst()->CreateGameWindow(nullptr, _Name.c_str());
-	//윈도우 
 	GameEngineWindow::GetInst()->SetWindowScaleAndPosition({ 0,0 }, {1280, 720});
 	GameEngineWindow::GetInst()->ShowGameWindow();
 	GameEngineWindow::GetInst()->MessageLoop(

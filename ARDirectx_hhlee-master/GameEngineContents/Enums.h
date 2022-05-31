@@ -6,3 +6,9 @@ enum class GameObjectGroup
 	Monster,
 	UI,
 };
+
+enum class WindowSize
+{
+	WindowX = 1280,
+	WindowY = 720
+};

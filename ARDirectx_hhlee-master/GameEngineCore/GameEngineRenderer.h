@@ -1,8 +1,8 @@
 #pragma once
-#include "GameEngineComponent.h"
+#include "GameEngineTransformComponent.h"
 
 // Ό³Έν :
-class GameEngineRenderer : public GameEngineComponent
+class GameEngineRenderer : public GameEngineTransformComponent
 {
 	friend class GameEngineLevel;
 
@@ -21,9 +21,7 @@ protected:
 	virtual void Start();
 	virtual void Update(float _DeltaTime) {}
 	virtual void End() {}
-private :
-	class GameEngineVertexBuffer* Vertex = nullptr;
-	class GameEngineIndexBuffer* Index = nullptr;
+
 private:
 	void Render(float _DeltaTime);
 

@@ -1,6 +1,7 @@
 #pragma once
 #include <GameEngineBase/GameEngineNameObject.h>
 #include <GameEngineBase/GameEngineUpdateObject.h>
+#include <GameEngineBase/GameEngineMath.h>
 #include <list>
 #include <map>
 
@@ -38,6 +39,13 @@ protected:
 		return CreateActor<ActorType>(static_cast<int>(_ObjectGroupIndex));
 	}
 
+	template<typename ActorType, typename GroupIndexType, typename PosType, typename AngleType>
+	GameEngineActor* CreateActor(GroupIndexType _ObjectGroupIndex, PosType _Pos, AngleType _Angle)
+	{
+		return CreateActor<ActorType>(static_cast<int>(_ObjectGroupIndex), static_cast<float4>(_Pos)
+			, static_cast<float>(_Angle));
+	}
+
 	template<typename ActorType>
 	GameEngineActor* CreateActor(int _ObjectGroupIndex = 0) 
 	{
@@ -56,7 +64,23 @@ protected:
 		return NewActor;
 	}
 
+	template<typename ActorType>
+	GameEngineActor* CreateActor(int _ObjectGroupIndex, float4 _Pos, float _Angle)
+	{
+		GameEngineActor* NewActor = new ActorType(_Pos, _Angle);
+		NewActor->ParentLevel = this;
+		NewActor->Start();
+		NewActor->SetLevel(this);
 
+		// AllActors[_ObjectGroupIndex]게 사용하면
+		// 없으면 만들어버리고 있으면
+		// 찾아서 리턴해준다.
+		std::list<GameEngineActor*>& Group = AllActors[_ObjectGroupIndex];
+
+		Group.push_back(NewActor);
+
+		return NewActor;
+	}
 
 private:
 	// 0번 그룹 플레이어
@@ -66,7 +90,7 @@ private:
 
 	void ActorUpdate(float _DelataTime);
 
-
+	void LevelUpdate(float DeltaTime);
 
 private:
 	// 0번 백그라운드

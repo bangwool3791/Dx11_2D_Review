@@ -21,7 +21,7 @@ void ContentsCore::Start()
 	CreateLevel<TitleLevel>("Title");
 	CreateLevel<PlayLevel>("Play");
 
-	ChangeLevel("Title");
+	ChangeLevel("Play");
 
 	// 게임컨텐츠 정의
 	// 이 게임에는 타이틀화면

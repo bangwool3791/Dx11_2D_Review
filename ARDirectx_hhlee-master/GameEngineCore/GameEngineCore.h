@@ -1,7 +1,6 @@
 #pragma once
 #include <GameEngineBase/GameEngineString.h>
 #include <GameEngineBase/GameEngineDebug.h>
-
 #include <map>
 
 // 설명 :
@@ -62,6 +61,7 @@ private:
 
 	// 헤더 추가하기 싫어서 초기화를 CPP에서 하기 위한 함수.
 	static void InitializeLevel(GameEngineLevel* _Level, const std::string _Name);
+
 	// delete Function
 	GameEngineCore(const GameEngineCore& _Other) = delete;
 	GameEngineCore(GameEngineCore&& _Other) noexcept = delete;

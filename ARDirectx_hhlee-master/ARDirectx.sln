@@ -33,7 +33,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameEngineContents", "GameE
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DOC", "DOC", "{9394E016-14F3-4D7A-AA01-3A295E5DC1C9}"
 	ProjectSection(SolutionItems) = preProject
+		공간변환.txt = 공간변환.txt
 		이벤트.txt = 이벤트.txt
+		프로젝트 구성이유.txt = 프로젝트 구성이유.txt
 	EndProjectSection
 EndProject
 Global

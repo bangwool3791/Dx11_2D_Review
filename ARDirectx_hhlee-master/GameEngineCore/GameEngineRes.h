@@ -5,11 +5,13 @@
 #include <GameEngineBase/GameEngineNameObject.h>
 #include <GameEngineBase/GameEngineString.h>
 
+// Ό³Έν :
 template<typename ResType>
-class GameEngineRes
-	:public GameEngineNameObject
+class GameEngineRes : public GameEngineNameObject
 {
-public :
+
+public:
+	// constrcuter destructer
 	GameEngineRes() {}
 	~GameEngineRes() {}
 
@@ -21,32 +23,36 @@ public :
 
 	static ResType* Find(const std::string& _Name)
 	{
-		std::string Name = GameEngineString::ToUpperReturn(_Name);
-		typename std::map<std::string, ResType*>::iterator Iter =  NamedRes.find(Name);
+		std::string UpperName = GameEngineString::ToUpperReturn(_Name);
+
+		typename std::map<std::string, ResType*>::iterator Iter =  NamedRes.find(UpperName);
 
 		if (NamedRes.end() == Iter)
 		{
 			return nullptr;
 		}
-
+		
 		return Iter->second;
 	}
 
-	static void ResourcesDestroy()
+	static void ResourcesDestroy() 
 	{
-		for (auto& elem : UnNamedRes)
+		for (auto& Res : UnNamedRes)
 		{
-			delete elem;
+			delete Res;
 		}
 
-		for (auto& elem : NamedRes)
+		for (auto& Res : NamedRes)
 		{
-			delete elem.second;
+			delete Res.second;
 		}
 	}
+
 protected:
 	static std::map<std::string, ResType*> NamedRes;
 	static std::list<ResType*> UnNamedRes;
+
+private:
 
 };
 
@@ -55,3 +61,4 @@ std::map<std::string, ResType*> GameEngineRes<ResType>::NamedRes;
 
 template<typename ResType>
 std::list<ResType*> GameEngineRes<ResType>::UnNamedRes;
+
