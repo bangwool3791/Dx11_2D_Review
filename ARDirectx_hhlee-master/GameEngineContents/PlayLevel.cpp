@@ -17,7 +17,7 @@ void PlayLevel::Start()
 	// GEngine::createActor
 	for (float i = 0; i < 360.f; i += 35.f)
 	{
-		CreateActor<Player, GameObjectGroup, float4, float>(GameObjectGroup::Player,
+		CreateActor<Player>(GameObjectGroup::Player,
 			float4{ static_cast<float>(WindowSize::WindowX) * (float)0.5f, static_cast<float>(WindowSize::WindowY) * (float)0.5f, 0.f },
 			i);
 	}
@@ -32,7 +32,7 @@ void PlayLevel::Update(float _DeltaTime)
 	{
 		for (float i = 0; i < 360.f; i += 35.f)
 		{
-			CreateActor<Player, GameObjectGroup, float4, float>(GameObjectGroup::Player,
+			CreateActor<Player>(GameObjectGroup::Player,
 				float4{ static_cast<float>(WindowSize::WindowX) * (float)0.5f, static_cast<float>(WindowSize::WindowY) * (float)0.5f, 0.f },
 				i);
 		}
