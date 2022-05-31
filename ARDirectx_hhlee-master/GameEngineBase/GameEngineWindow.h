@@ -10,6 +10,7 @@ class GameEngineWindow
 {
 private:
 	static GameEngineWindow* Inst_;
+	static HWND hWnd_;
 
 public:
 	inline static GameEngineWindow* GetInst() 
@@ -46,14 +47,15 @@ public:
 		return Inst_->Scale_;
 	}
 
-
+	static  HWND Get_hWnd() {
+		return hWnd_;
+	}
 protected:
 
 private:
 	std::string Title_;
 	bool WindowOn_;
 	HINSTANCE hInst_;
-	HWND hWnd_;
 	HDC HDC_;
 	float4 Scale_;
 
@@ -66,7 +68,6 @@ private:
 	GameEngineWindow(GameEngineWindow&& _Other) noexcept = delete;
 	GameEngineWindow& operator=(const GameEngineWindow& _Other) = delete;
 	GameEngineWindow& operator=(GameEngineWindow&& _Other) noexcept = delete;
-
 
 	static LRESULT CALLBACK MessageProcess(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 

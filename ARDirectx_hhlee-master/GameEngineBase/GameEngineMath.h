@@ -163,13 +163,6 @@ public:
 	//           []
 	// [][][][]  []
 
-	static float DotProduct3D(const float4& _Left, const float4& _Right)
-	{
-		float fValue = _Left.x * _Right.x + _Left.y * _Right.y + _Left.z * _Right.z;
-		// DirectX::XMVector3Dot
-		return fValue;
-	}
-
 
 
 public:
@@ -379,6 +372,35 @@ public:
 		return NewPoint;
 	}
 
+	static float DotProduct3D(const float4& _Left, const float4& _Right)
+	{
+		float fValue = _Left.x * _Right.x + _Left.y * _Right.y + _Left.z * _Right.z;
+		// DirectX::XMVector3Dot
+		return fValue;
+	}
+
+	static float DotDegree(const float4& _Left, const float4& _Right)
+	{
+		//Create Unit Vector from Left
+		float LeftSize = sqrtf(_Left.x * _Left.x + _Left.y * _Left.y + _Left.z * _Left.z);
+		float RightSize = sqrtf(_Right.x * _Right.x + _Right.y * _Right.y + _Right.z * _Right.z);
+
+		//Calculate Dot
+		float ResultCos = _Left.x * _Right.x + _Left.y
+			* _Right.y + _Left.z * _Right.z;
+		ResultCos = ResultCos / (LeftSize * RightSize);
+		// Get Dot
+		// Get Cos
+		// Get Angle
+		if (ResultCos > GameEngineMath::PI2)
+		{
+			ResultCos -= GameEngineMath::PI2;
+		}
+
+		float Result = acosf(ResultCos);
+
+		return Result * GameEngineMath::RadianToDegree;
+	}
 public:
 	float4()
 		: x(0.0f), y(0.0f), z(0.0f), w(1.0f)

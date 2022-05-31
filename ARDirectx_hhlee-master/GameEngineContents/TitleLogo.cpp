@@ -39,7 +39,7 @@ void TitleLogo::Update(float _DeltaTime)
 	TimeAngle += _DeltaTime * 90.0f;
 
 	static float4 Pos = float4{ _DeltaTime , 0, 0, 0};
-	Pos += float4{ _DeltaTime , -_DeltaTime, 0, 0 };
+	Pos += float4{ _DeltaTime , 0, 0, 0 };
 	GetTransform().SetLocalMove(Pos);
 	//GetTransform().SetLocalRotation({ 0.0f , 0.0f, TimeAngle });
 	RendererComponent->GetTransform().SetLocalRotation({ TimeAngle , TimeAngle, TimeAngle });
