@@ -14,13 +14,16 @@ PlayLevel::~PlayLevel()
 
 void PlayLevel::Start()
 {
+	CreateActor<Player>(GameObjectGroup::Player,
+		float4{ 
+			static_cast<float>(WindowSize::WindowX) * (float)0.5f, 
+			static_cast<float>(WindowSize::WindowY) * (float)0.5f, 
+			0.f },
+		0.f);
 	// GEngine::createActor
-	for (float i = 0; i < 360.f; i += 35.f)
-	{
-		CreateActor<Player>(GameObjectGroup::Player,
-			float4{ static_cast<float>(WindowSize::WindowX) * (float)0.5f, static_cast<float>(WindowSize::WindowY) * (float)0.5f, 0.f },
-			i);
-	}
+	//for (float i = 0; i < 360.f; i += 35.f)
+	//{
+	//}
 
 	GameEngineInput::GetInst()->CreateKey("LButton", 'q');
 
@@ -32,7 +35,7 @@ void PlayLevel::Update(float _DeltaTime)
 	{
 		for (float i = 0; i < 360.f; i += 35.f)
 		{
-			CreateActor<Player>(GameObjectGroup::Player,
+			CreateActor<Player, GameObjectGroup, float4, float>(GameObjectGroup::Player,
 				float4{ static_cast<float>(WindowSize::WindowX) * (float)0.5f, static_cast<float>(WindowSize::WindowY) * (float)0.5f, 0.f },
 				i);
 		}

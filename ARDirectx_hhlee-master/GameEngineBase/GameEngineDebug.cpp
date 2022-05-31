@@ -4,7 +4,6 @@
 
 GameEngineDebug::GameEngineDebug() 
 {
-	//a
 }
 
 GameEngineDebug::~GameEngineDebug() 

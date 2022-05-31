@@ -45,9 +45,9 @@ void Player::Start()
 void Player::Update(float _DeltaTime)
 {
 	TimeAngle += _DeltaTime * 360.f;
-	Pos += float4{ (float)(_DeltaTime * 1.f), 0.f, 0, 0};
-	float4 Angle = Pos.VectorRotationToDegreeZAxis(Pos, PosAngle);
-	GetTransform().SetLocalMove(Angle);
+	Pos += float4{ 0.f , (float)(_DeltaTime * 1.f), 0.f, 0.f };
+	//float4 Angle = Pos.VectorRotationToDegreeZAxis(Pos, PosAngle);
+	GetTransform().SetLocalMove(Pos);
 	//GetTransform().SetLocalRotation({ 0.0f , 0.0f, TimeAngle });
 	RendererComponent->GetTransform().SetLocalRotation({ TimeAngle , TimeAngle, TimeAngle });
 }
