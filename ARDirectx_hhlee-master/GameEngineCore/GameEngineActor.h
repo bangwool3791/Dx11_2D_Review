@@ -29,10 +29,10 @@ public:
 		return ParentLevel;	
 	}
 
-	template<typename Componenttype>
-	Componenttype* CreateComponent() 
+	template<typename ComponentType>
+	ComponentType* CreateComponent()
 	{
-		GameEngineComponent* NewComponent = new Componenttype();
+		GameEngineComponent* NewComponent = new ComponentType();
 		NewComponent->ParentActor = this;
 		NewComponent->Start();
 
@@ -46,7 +46,7 @@ public:
 			SettingTransformComponent(TransCom);
 			AllTransComList.push_back(TransCom);
 		}
-		return dynamic_cast<Componenttype*>(NewComponent);
+		return dynamic_cast<ComponentType*>(NewComponent);
 	}
 
 	void SettingTransformComponent(GameEngineTransformComponent* TransCom);
@@ -55,8 +55,7 @@ protected:
 	virtual void Start() override;
 	virtual void Update(float _DeltaTime) override;
 	virtual void End() override;
-protected:
-	class GameEngineRenderer* RendererComponent = nullptr;
+
 private:
 	void ComponentUpdate(float _ScaleDeltaTime, float _DeltaTime);
 
@@ -69,11 +68,6 @@ private:
 	void SetLevel(GameEngineLevel* _ParentLevel) 
 	{
 		ParentLevel = _ParentLevel;
-	}
-
-	void SetPosition(const float4& _Pos)
-	{
-		GetTransform().SetLocalPosition(_Pos);
 	}
 
 /////////////////////////////////////////////////// 기하관련

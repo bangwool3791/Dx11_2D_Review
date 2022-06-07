@@ -1,6 +1,5 @@
 #pragma once
 #include <GameEngineCore/GameEngineActor.h>
-#include <GameEngineBase/GameEngineMath.h>
 
 // Ό³Έν :
 class Player : public GameEngineActor
@@ -8,7 +7,6 @@ class Player : public GameEngineActor
 public:
 	// constrcuter destructer
 	Player();
-	Player(const float4& _Pos, float Angle);
 	~Player();
 
 	// delete Function
@@ -19,12 +17,9 @@ public:
 
 protected:
 	void Start() override;
-	void Update(float _DeltaTime) override;
-	void End() override;
+	void Update(float _DeltaTime) {}
+	void End()  {}
 
 private:
-	float PosAngle = 0.f;
-	float TimeAngle = 0.f; 
-	float4 Pos;
 };
 

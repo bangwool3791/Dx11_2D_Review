@@ -3,8 +3,6 @@
 #include <list>
 
 // 설명 :
-//트랜스폼은 로컬과 월드 행렬을 가지고 있다. 
-
 class GameEngineTransform
 {
 public:
@@ -20,33 +18,34 @@ public:
 
 
 public:
-	//Local Area Function
-	//로컬 행렬 스케일 Set
 	inline void SetLocalScale(const float4& _Value)
 	{
 		LocalScale = _Value;
 		LocalScaleMat.Scale(LocalScale);
 	}
 
+
 	// 아무리 편의성 함수가 많아져도
-	//로컬 행렬 회전 Set
-	//float4로 들어오는 Value 값의 인자는 Degree를 사용하는 각도 값이 된다.
 	void SetLocalRotation(const float4& _Value)
 	{
 		LocalRotation = _Value;
-		//회전은 항상 Degree를 사용한다.
 		LocalRotateMat.RotationRadian(LocalRotation * GameEngineMath::DegreeToRadian);
 	}
 
 	inline void SetLocalPosition(const float4& _Value)
 	{
 		LocalPosition = _Value;
-		LocalPositionMat.Position(LocalPosition);
+		LocalPositionMat.Postion(LocalPosition);
 	}
 
 	inline void SetLocalMove(const float4& _Value)
 	{
 		SetLocalPosition(LocalPosition + _Value);
+	}
+
+	void SetLook(const float4& _Look)
+	{
+		LocalPositionMat.LookAt(_Look);
 	}
 
 	inline float4 GetLocalScale() const
@@ -67,79 +66,85 @@ public:
 		return LocalWorldMat;
 	}
 
-	//World Function Area
-	inline void SetWorldScale(const float4& _Value)
-	{
-		WorldScale = _Value;
-		WorldWorldMat.Scale(WorldScale);
-	}
-
-	void SetWorldRotation(const float4& _Value)
-	{
-		WorldRotation = _Value;
-		WorldWorldMat.RotationRadian(WorldRotation * GameEngineMath::DegreeToRadian);
-	}
-
-	inline void SetWorldPosition(const float4& _Value)
-	{
-		WorldPosition = _Value;
-		WorldWorldMat.Position(WorldPosition);
-	}
-
-	inline void SetWorldMove(const float4& _Value)
-	{
-		SetWorldMove(WorldPosition + _Value);
-	}
-
-	inline float4 GetWorldScale() const
-	{
-		return WorldScale;
-	}
-	inline float4 GetWorldRotation() const
-	{
-		return WorldRotation;
-	}
-	inline float4 GetWorldPosition() const
-	{
-		return WorldPosition;
-	}
-
 	inline float4x4 GetWorldWorld() const
 	{
 		return WorldWorldMat;
 	}
 
+	inline float4x4 GetWorldViewProjection() const
+	{
+		return WorldViewProjectMat;
+	}
+
+	inline float4 GetForwardVector() const
+	{
+		// 기저벡터라고 하는데.
+		// 기저벡터는 행렬의 축을 이루는 3개의 벡터를 기저백터라고 합니다.
+		// 0[1][0][0][0] 내 오른쪽
+		// 1[0][1][0][0] 내 위
+		// 2[0][0][1][0] 내 앞
+		// 3[0][0][0][1]
+		// 길이 1짜리 방향벡터를 리턴한다.
+		return WorldWorldMat.ArrV[2].NormalizeReturn();
+	}
+
+	inline float4 GetUpVector() const
+	{
+		return WorldWorldMat.ArrV[1].NormalizeReturn();
+	}
+
+	inline float4 GetRightVector() const
+	{
+		return WorldWorldMat.ArrV[0].NormalizeReturn();
+	}
+
+
 	void CalculateWorld();
 
+	void CalculateWorldViewProjection();
+
 	void PushChild(GameEngineTransform* _Child);
+
+	void SetView(const float4x4& _Mat)
+	{
+		View = _Mat;
+	}
+
+	float4x4& GetView()
+	{
+		return View;
+	}
+
+	void SetView_Look(const float4& _Look)
+	{
+		View.LookAt(_Look);
+	}
+
+	void SetProjection(const float4x4& _Mat)
+	{
+		Projection = _Mat;
+	}
 
 protected:
 
 private:
-	//부모 트랜스폼
 	GameEngineTransform* Parent;
-	//자식 트랜스폼
-	//느낌으로는 액터의 랜더러, 충돌체 등등이 자식이 될것 같다.
 	std::list<GameEngineTransform*> Childs;
 
 	// 로컬과 월드의 차이가 뭐냐 개념을 확실히 잡아야합니다..
-	// 코더가 행렬의 크기, 회전, 위치 값을 반환 받기 위한 멤버 변수
 	float4 LocalScale;
 	float4 LocalRotation;
 	float4 LocalPosition;
-	//월드 스케일, 회전, 위치
-	float4 WorldScale;
-	float4 WorldRotation;
-	float4 WorldPosition;
-	//로컬 행렬 크기
+
 	float4x4 LocalScaleMat;
-	//로컬 행렬 위치
 	float4x4 LocalPositionMat;
-	//로컬 행렬 회전
 	float4x4 LocalRotateMat;
-	//로컬 행렬
-	//크기 * 위치 * 회전 = 로컬행렬
 	float4x4 LocalWorldMat;
-	
+
+	float4x4 View;
+	float4x4 Projection;
+
 	float4x4 WorldWorldMat;
+	float4x4 WorldViewMat;
+	float4x4 WorldViewProjectMat;
 };

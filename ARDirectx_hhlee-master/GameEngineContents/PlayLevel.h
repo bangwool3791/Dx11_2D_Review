@@ -1,6 +1,6 @@
 #pragma once
 #include <GameEngineCore/GameEngineLevel.h>
-
+#include <GameEngineBase/GameEngineMath.h>
 // Ό³Έν :
 class PlayLevel : public GameEngineLevel
 {
@@ -21,6 +21,8 @@ protected:
 	void End() override;
 
 private:
-
+	float4 m_PlayerDir;
+	class GameEngineCameraActor* m_pCamera;
+	class Player* m_pPlayer;
 };
 

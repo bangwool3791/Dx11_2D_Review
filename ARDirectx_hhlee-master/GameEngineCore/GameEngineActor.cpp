@@ -1,7 +1,6 @@
 #include "GameEngineActor.h"
 #include "GameEngineComponent.h"
 #include "GameEngineTransformComponent.h"
-#include "GameEngineRenderer.h"
 
 GameEngineActor::GameEngineActor() 
 	:ParentLevel(nullptr)

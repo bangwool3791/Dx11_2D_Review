@@ -1,18 +1,23 @@
 #pragma once
 #include <GameEngineBase/GameEngineNameObject.h>
 #include <GameEngineBase/GameEngineUpdateObject.h>
-#include <GameEngineBase/GameEngineMath.h>
 #include <list>
 #include <map>
 
 // 설명 : 화면(타이틀 화면, 플레이 화면, 인벤토리 화면)
+class GameEngineCore;
 class GameEngineActor;
+class GameEngineCamera;
+class GameEngineRenderer;
+class GameEngineTransform;
+class GameEngineCameraActor;
 class GameEngineLevel :
-	public GameEngineNameObject , 
+	public GameEngineNameObject ,
 	public GameEngineUpdateObject
 {
-	friend class GameEngineRenderer;
-	friend class GameEngineCore;
+	friend GameEngineCore;
+	friend GameEngineCamera;
+	friend GameEngineRenderer;
 	// 레벨이 현재까지 얼마나 켜져있었는지 시간을 잴수 있게 한다.
 
 public:
@@ -26,6 +31,13 @@ public:
 	GameEngineLevel& operator=(const GameEngineLevel& _Other) = delete;
 	GameEngineLevel& operator=(GameEngineLevel&& _Other) noexcept = delete;
 
+	GameEngineCamera* GetMainCamera() 
+	{
+		return MainCamera;
+	}
+
+	GameEngineTransform& GetMainCameraActorTransform();
+
 protected:
 	//template<typename ReturnType, typename ActorType, typename GroupIndexType>
 	//ReturnType* CreateActor(GroupIndexType _ObjectGroupIndex)
@@ -34,20 +46,13 @@ protected:
 	//}
 
 	template<typename ActorType, typename GroupIndexType>
-	GameEngineActor* CreateActor(GroupIndexType _ObjectGroupIndex)
+	ActorType* CreateActor(GroupIndexType _ObjectGroupIndex)
 	{
 		return CreateActor<ActorType>(static_cast<int>(_ObjectGroupIndex));
 	}
 
-	template<typename ActorType, typename GroupIndexType, typename PosType, typename AngleType>
-	GameEngineActor* CreateActor(GroupIndexType _ObjectGroupIndex, PosType _Pos, AngleType _Angle)
-	{
-		return CreateActor<ActorType>(static_cast<int>(_ObjectGroupIndex), static_cast<float4>(_Pos)
-			, static_cast<float>(_Angle));
-	}
-
 	template<typename ActorType>
-	GameEngineActor* CreateActor(int _ObjectGroupIndex = 0) 
+	ActorType* CreateActor(int _ObjectGroupIndex = 0)
 	{
 		GameEngineActor* NewActor = new ActorType();
 		NewActor->ParentLevel = this;
@@ -61,26 +66,10 @@ protected:
 
 		Group.push_back(NewActor);
 
-		return NewActor;
+		return dynamic_cast<ActorType*>(NewActor);
 	}
 
-	template<typename ActorType>
-	GameEngineActor* CreateActor(int _ObjectGroupIndex, float4 _Pos, float _Angle)
-	{
-		GameEngineActor* NewActor = new ActorType(_Pos, _Angle);
-		NewActor->ParentLevel = this;
-		NewActor->Start();
-		NewActor->SetLevel(this);
 
-		// AllActors[_ObjectGroupIndex]게 사용하면
-		// 없으면 만들어버리고 있으면
-		// 찾아서 리턴해준다.
-		std::list<GameEngineActor*>& Group = AllActors[_ObjectGroupIndex];
-
-		Group.push_back(NewActor);
-
-		return NewActor;
-	}
 
 private:
 	// 0번 그룹 플레이어
@@ -96,7 +85,11 @@ private:
 	// 0번 백그라운드
 	// 1번 플레이어
 	// 2번 UI
-	std::map<int, std::list<class GameEngineRenderer*>> AllRenderer_;
+	GameEngineCamera* MainCamera;
+
+	GameEngineCamera* UIMainCamera;
+
+	void PushCamera(GameEngineCamera* _Camera);
 
 	void PushRenderer(GameEngineRenderer* _Renderer);
 
